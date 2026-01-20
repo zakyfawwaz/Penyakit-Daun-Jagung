@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+
+        <main class="admin-main">
+            {% include 'admin/header.html' %}
+
+            <div class="admin-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h1 class="content-title">Categories</h1>
+                    <a href="{{ url_for('admin_categories_create') }}" class="btn btn-primary">+ Create Category</a>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <div class="flash-message {{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <div class="table-card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Slug</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in categories %}
+                            <tr class="table-row">
+                                <td>{{ category.name }}</td>
+                                <td>{{ category.slug }}</td>
+                                <td>{{ category.description or '-' }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin_categories_edit', id=category.id) }}" class="btn btn-sm btn-secondary">Edit</a>
+                                    <form method="POST" action="{{ url_for('admin_categories_delete', id=category.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #94a3b8; padding: 40px;">No categories yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+

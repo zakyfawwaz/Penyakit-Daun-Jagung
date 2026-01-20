@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corn Disease Classification - AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="header-container">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
+            <div class="header-left">
+                <div class="welcome-text">
+                    <span class="welcome-label">Selamat datang,</span>
+                    <span class="welcome-username">{{ user.full_name or user.username }}</span>
+                </div>
+            </div>
+            <div class="logo">
+                <span class="logo-icon">🌽</span>
+                <span class="logo-text">Corn Disease Classification</span>
+            </div>
+            <div class="mobile-sidebar-overlay" id="mobileOverlay"></div>
+            <nav class="main-nav" id="mainNav">
+                <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">✕</button>
+                <a href="#home" class="nav-link active" data-section="home">Home</a>
+                <a href="#about" class="nav-link" data-section="about">About</a>
+                <a href="#technology" class="nav-link" data-section="technology">Technology</a>
+                <a href="#detection" class="nav-link" data-section="detection">Detection</a>
+                <a href="{{ url_for('profile') }}" class="nav-link profile-link">Profil Saya</a>
+            </nav>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon">🌙</span>
+                    <span class="theme-text">Theme</span>
+                </button>
+                <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout">
+                    <span>
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 17v-3H9v-4h7V7l5 5-5 5zM14 2a2 2 0 0 1 2 2v2h-2V4H5v16h9v-2h2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9z"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <div class="ai-badge">Powered by AI</div>
+            <h1 class="hero-title">
+                Deteksi Penyakit Daun Jagung dengan <span class="highlight">Teknologi AI</span>
+            </h1>
+            <p class="hero-description">
+                Aplikasi cerdas berbasis web untuk klasifikasi penyakit daun tanaman jagung menggunakan teknologi <strong>Convolutional Neural Network (CNN)</strong> dan <strong>Random Forest</strong> untuk memberikan hasil deteksi yang akurat dan solusi penanganan yang tepat.
+            </p>
+            <div class="hero-buttons">
+                <a href="#detection" class="btn-primary">Cek Sekarang</a>
+                <a href="#about" class="btn-secondary">Pelajari Lebih Lanjut</a>
+            </div>
+            <div class="stats-section">
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Akurasi</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">&lt;1s</div>
+                    <div class="stat-label">Waktu Deteksi</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5000+</div>
+                    <div class="stat-label">Data Training</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="content-section">
+        <div class="section-container">
+            <div class="info-card">
+                <h2 class="section-title">Apa Itu Corn Disease Classification?</h2>
+                <p class="section-text">
+                    Corn Disease Classification adalah sistem deteksi penyakit daun jagung berbasis kecerdasan buatan yang menggunakan teknologi Deep Learning dengan arsitektur ResNet-50 dan Random Forest. Sistem ini dapat mengidentifikasi tiga kondisi daun jagung: <strong>Hawar, Karat, dan Sehat</strong> dengan akurasi tinggi. Aplikasi ini dirancang untuk membantu petani dan peneliti dalam mendeteksi penyakit tanaman jagung secara cepat dan akurat, serta memberikan rekomendasi penanganan yang tepat.
+                </p>
+                <p class="section-text">
+                    Aplikasi ini dirancang untuk membantu petani dan peneliti dalam mendeteksi penyakit tanaman jagung secara cepat dan akurat, serta memberikan rekomendasi penanganan yang tepat. Dengan menggunakan teknologi AI terdepan, sistem ini dapat menganalisis gambar daun jagung dalam hitungan detik dengan tingkat akurasi yang tinggi.
+                </p>
+                <h3 class="subsection-title">Fitur Utama</h3>
+                <ul class="feature-list">
+                    <li>Deteksi cepat dalam waktu kurang dari 1 detik</li>
+                    <li>Akurasi tinggi hingga 95%</li>
+                    <li>Mendukung tiga klasifikasi: Hawar, Karat, dan Sehat</li>
+                    <li>Menggunakan dua model AI: ResNet-50 dan Random Forest</li>
+                    <li>Interface yang mudah digunakan</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology" class="content-section">
+        <div class="section-container">
+            <h2 class="section-title">Teknologi yang Digunakan</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">🔲</div>
+                    <h3 class="tech-title">ResNet-50</h3>
+                    <p class="tech-description">Arsitektur CNN yang efisien dan optimal untuk deteksi gambar dengan performa tinggi dan akurasi maksimal. Menggunakan residual connections untuk mengekstrak fitur-fitur kompleks dari gambar.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🌳</div>
+                    <h3 class="tech-title">Random Forest</h3>
+                    <p class="tech-description">Ensemble learning method yang menggunakan fitur dari ResNet-50 untuk klasifikasi. Memberikan prediksi yang robust dengan menggabungkan multiple decision trees.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">⚡</div>
+                    <h3 class="tech-title">Fast Processing</h3>
+                    <p class="tech-description">Hasil analisis dalam hitungan detik dengan akurasi tinggi untuk keputusan cepat.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🎯</div>
+                    <h3 class="tech-title">High Accuracy</h3>
+                    <p class="tech-description">Model terlatih dengan ribuan gambar untuk memberikan prediksi yang akurat dan reliable.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detection Section -->
+    <section id="detection" class="content-section detection-section">
+        <div class="section-container">
+            <h2 class="section-title">Deteksi Penyakit Daun Jagung</h2>
+            <p class="section-subtitle">Sistem AI berbasis ResNet-50 untuk mendeteksi penyakit hawar, karat, dan daun sehat</p>
+            
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages-container">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                <span class="flash-icon">
+                                    {% if category == 'error' %}⚠️
+                                    {% elif category == 'success' %}✅
+                                    {% elif category == 'warning' %}⚠️
+                                    {% else %}ℹ️{% endif %}
+                                </span>
+                                <span class="flash-text">{{ message }}</span>
+                                <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="upload-card">
+                <form id="uploadForm" action="/predict" method="POST" enctype="multipart/form-data">
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput" name="file" accept="image/*" required>
+                        <label for="fileInput" class="upload-label">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span class="upload-text">Klik untuk memilih gambar atau drag & drop</span>
+                            <span class="upload-hint">Format: JPG, PNG, JPEG (Max 16MB)</span>
+                        </label>
+                    </div>
+
+                    <div class="preview-container" id="previewContainer" style="display: none;">
+                        <img id="imagePreview" src="" alt="Preview">
+                        <button type="button" class="remove-btn" id="removeBtn">✕ Hapus</button>
+                    </div>
+
+                    <button type="submit" class="detect-btn" id="detectBtn" disabled>
+                        🔍 Deteksi Sekarang
+                    </button>
+                </form>
+            </div>
+
+            <div class="info-section">
+                <h2>Kelas Deteksi</h2>
+                <div class="classes-grid">
+                    <div class="class-card">
+                        <div class="class-icon">🦠</div>
+                        <h3>Hawar</h3>
+                        <p>Daun jagung yang terkena penyakit hawar</p>
+                    </div>
+                    <div class="class-card">
+                        <div class="class-icon">✅</div>
+                        <h3>Sehat</h3>
+                        <p>Daun jagung dalam kondisi sehat</p>
+                    </div>
+                    <div class="class-card">
+                        <div class="class-icon">🟠</div>
+                        <h3>Karat</h3>
+                        <p>Daun jagung yang terkena penyakit karat</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-brand-header">
+                        <span class="footer-brand-icon">🌽</span>
+                        <span class="footer-brand-name">Corn Disease Classification</span>
+                    </div>
+                    <p class="footer-brand-tagline">
+                        Menghubungkan Anda dengan teknologi AI canggih untuk deteksi penyakit daun jagung secara akurat dan cepat.
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-links-wrapper">
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="#about" class="footer-link">About</a>
+                        <a href="#technology" class="footer-link">Technology</a>
+                        <a href="#detection" class="footer-link">Detection</a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Resources</h3>
+                    <div class="footer-links">
+                        <a href="#about" class="footer-link">Disease Database</a>
+                        <a href="#technology" class="footer-link">AI Technology</a>
+                        <a href="#detection" class="footer-link">Detection Guide</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-contact">
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Contact</h3>
+                    <p class="footer-description">
+                        Aplikasi demo untuk klasifikasi penyakit daun jagung menggunakan teknologi Deep Learning ResNet-50 dan Random Forest.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>&copy; 2024 Corn Disease Classification. Educational demo application</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle - Sidebar Style
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mainNav = document.getElementById('mainNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const mobileNavClose = document.getElementById('mobileNavClose');
+        
+        function openMobileMenu() {
+            if (mainNav) mainNav.classList.add('active');
+            if (mobileOverlay) mobileOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            if (mainNav) mainNav.classList.remove('active');
+            if (mobileOverlay) mobileOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle && mainNav) {
+            mobileMenuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openMobileMenu();
+            });
+
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            // Close menu when clicking on overlay
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            // Close menu when clicking on a nav link
+            mainNav.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            });
+        }
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Smooth Scroll for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    const headerOffset = 80;
+                    const elementPosition = targetSection.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Update active navigation
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Update active navigation on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link[data-section]');
+
+        function updateActiveNav() {
+            let current = '';
+            const scrollPosition = window.pageYOffset + 150;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            // Update all nav links including detection
+            document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === current) {
+                    link.classList.add('active');
+                }
+            });
+
+            // If at top, make home active
+            if (window.pageYOffset < 100) {
+                document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-section') === 'home') {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+
+        // File Upload Functionality
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const removeBtn = document.getElementById('removeBtn');
+        const detectBtn = document.getElementById('detectBtn');
+        const uploadForm = document.getElementById('uploadForm');
+
+        if (fileInput && uploadArea && previewContainer && imagePreview && removeBtn && detectBtn) {
+            // Handle file selection
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                        uploadArea.style.display = 'none';
+                        detectBtn.disabled = false;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Drag and drop
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('drag-over');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change', { bubbles: true });
+                    fileInput.dispatchEvent(event);
+                }
+            });
+
+            // Remove image
+            removeBtn.addEventListener('click', function() {
+                fileInput.value = '';
+                previewContainer.style.display = 'none';
+                uploadArea.style.display = 'flex';
+                detectBtn.disabled = true;
+            });
+        }
+
+        // Auto-hide flash messages after 5 seconds
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach(message => {
+            setTimeout(() => {
+                message.style.opacity = '0';
+                message.style.transform = 'translateY(-10px)';
+                setTimeout(() => message.remove(), 300);
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
+

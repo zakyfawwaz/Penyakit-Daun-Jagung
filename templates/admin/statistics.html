@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .stat-card-title {
+            font-size: 0.9em;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .stat-card-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .stat-card-change {
+            font-size: 0.85em;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .chart-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .bar-label {
+            min-width: 100px;
+            font-size: 0.9em;
+            color: #64748b;
+        }
+        .bar-container {
+            flex: 1;
+            height: 30px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: width 0.3s ease;
+        }
+        .bar-value {
+            min-width: 60px;
+            text-align: right;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+
+        <main class="admin-main">
+            {% include 'admin/header.html' %}
+
+            <div class="admin-content">
+                <h1 class="content-title">Statistics</h1>
+
+                <!-- Summary Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Total Users</div>
+                            <div style="font-size: 1.5em;">👥</div>
+                        </div>
+                        <div class="stat-card-value">{{ total_users }}</div>
+                        <div class="stat-card-change">
+                            <span>↑</span>
+                            <span>Active users</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Total Detections</div>
+                            <div style="font-size: 1.5em;">🔍</div>
+                        </div>
+                        <div class="stat-card-value">{{ total_detections }}</div>
+                        <div class="stat-card-change">
+                            <span>↑</span>
+                            <span>All time</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Today Detections</div>
+                            <div style="font-size: 1.5em;">📊</div>
+                        </div>
+                        <div class="stat-card-value">{{ today_detections }}</div>
+                        <div class="stat-card-change">
+                            <span>↑</span>
+                            <span>Today</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">This Week</div>
+                            <div style="font-size: 1.5em;">📈</div>
+                        </div>
+                        <div class="stat-card-value">{{ week_detections }}</div>
+                        <div class="stat-card-change">
+                            <span>↑</span>
+                            <span>Last 7 days</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">This Month</div>
+                            <div style="font-size: 1.5em;">📅</div>
+                        </div>
+                        <div class="stat-card-value">{{ month_detections }}</div>
+                        <div class="stat-card-change">
+                            <span>↑</span>
+                            <span>Last 30 days</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Disease Info</div>
+                            <div style="font-size: 1.5em;">🦠</div>
+                        </div>
+                        <div class="stat-card-value">{{ total_diseases }}</div>
+                        <div class="stat-card-change">
+                            <span>→</span>
+                            <span>Total diseases</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="chart-section">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Detections by Disease Type</h3>
+                        <div class="bar-chart">
+                            {% for disease_stat in detection_by_disease %}
+                            <div class="bar-item">
+                                <div class="bar-label">{{ disease_stat.cnn_prediction or 'Unknown' }}</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: {{ (disease_stat.count / total_detections * 100) if total_detections > 0 else 0 }}%;">
+                                        {{ disease_stat.count }}
+                                    </div>
+                                </div>
+                                <div class="bar-value">{{ disease_stat.count }}</div>
+                            </div>
+                            {% else %}
+                            <p style="color: #94a3b8; text-align: center; padding: 20px;">No detection data yet</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Average Confidence by Disease</h3>
+                        <div class="bar-chart">
+                            {% for conf_stat in avg_confidence %}
+                            <div class="bar-item">
+                                <div class="bar-label">{{ conf_stat.cnn_prediction or 'Unknown' }}</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: {{ conf_stat.avg_conf if conf_stat.avg_conf else 0 }}%; background: linear-gradient(90deg, #10b981, #059669);">
+                                        {{ "%.1f"|format(conf_stat.avg_conf) if conf_stat.avg_conf else 0 }}%
+                                    </div>
+                                </div>
+                                <div class="bar-value">{{ "%.1f"|format(conf_stat.avg_conf) if conf_stat.avg_conf else 0 }}%</div>
+                            </div>
+                            {% else %}
+                            <p style="color: #94a3b8; text-align: center; padding: 20px;">No confidence data yet</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Detections -->
+                {% if daily_detections %}
+                <div class="chart-card">
+                    <h3 class="chart-title">Daily Detections (Last 7 Days)</h3>
+                    <div class="bar-chart">
+                        {% for daily in daily_detections %}
+                        <div class="bar-item">
+                            <div class="bar-label">{{ daily.date }}</div>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: {{ (daily.count / week_detections * 100) if week_detections > 0 else 0 }}%; background: linear-gradient(90deg, #f59e0b, #d97706);">
+                                    {{ daily.count }}
+                                </div>
+                            </div>
+                            <div class="bar-value">{{ daily.count }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Top Users Table -->
+                <div class="table-card" style="margin-top: 30px;">
+                    <h3 class="chart-title">Top Users by Detection Count</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Total Detections</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user_stat in top_users %}
+                            <tr class="table-row">
+                                <td><strong>#{{ loop.index }}</strong></td>
+                                <td>{{ user_stat.username }}</td>
+                                <td>{{ user_stat.full_name or '-' }}</td>
+                                <td>
+                                    <span class="status-badge published">{{ user_stat.detection_count }}</span>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #94a3b8; padding: 40px;">No user data yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Corn Disease Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #8bc34a 0%, #689f38 100%);
+            background-image: url("{{ url_for('static', filename='images/corn-field-background.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            padding: 20px;
+            position: relative;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(76, 175, 80, 0.3);
+            z-index: 0;
+        }
+
+        body.dark-theme .auth-container::before {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-card {
+            background: linear-gradient(135deg, #e8f5e9 0%, #fff9c4 50%, #f1f8e9 100%);
+            background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            z-index: 0;
+        }
+
+        body.dark-theme .auth-card::before {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        body.dark-theme .auth-card {
+            background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80');
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .auth-logo {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .auth-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        body.dark-theme .auth-title {
+            color: #fff9c4;
+        }
+
+        .auth-subtitle {
+            color: #558b2f;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        body.dark-theme .auth-subtitle {
+            color: #c5e1a5;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2e7d32;
+            font-weight: 600;
+            font-size: 0.95em;
+            position: relative;
+            z-index: 1;
+        }
+
+        body.dark-theme .form-label {
+            color: #c5e1a5;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #a5d6a7;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            position: relative;
+            z-index: 1;
+        }
+
+        body.dark-theme .form-input {
+            background: rgba(30, 30, 46, 0.8);
+            border-color: #66bb6a;
+            color: #e0e0e0;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        body.dark-theme .form-input:focus {
+            border-color: #66bb6a;
+            box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 16px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            background: #1b5e20;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        body.dark-theme .auth-footer {
+            border-top-color: #3a3a4e;
+        }
+
+        .auth-link {
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .auth-link {
+            color: #66bb6a;
+        }
+
+        .auth-link:hover {
+            color: #1b5e20;
+            text-decoration: underline;
+        }
+
+        body.dark-theme .auth-link:hover {
+            color: #81c784;
+        }
+
+        .flash-messages {
+            margin-bottom: 25px;
+        }
+
+        .flash-message {
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .flash-message.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        body.dark-theme .flash-message.error {
+            background: #3d1f1f;
+            color: #ef5350;
+            border-left-color: #ef5350;
+        }
+
+        .flash-message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        body.dark-theme .flash-message.success {
+            background: #1e3d20;
+            color: #66bb6a;
+            border-left-color: #66bb6a;
+        }
+
+        .flash-message.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border-left: 4px solid #1565c0;
+        }
+
+        body.dark-theme .flash-message.info {
+            background: #1a237e;
+            color: #64b5f6;
+            border-left-color: #64b5f6;
+        }
+
+        .flash-message.warning {
+            background: #fff3e0;
+            color: #e65100;
+            border-left: 4px solid #e65100;
+        }
+
+        body.dark-theme .flash-message.warning {
+            background: #3e2723;
+            color: #ff9800;
+            border-left-color: #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card" style="position: relative; z-index: 1;">
+            <div class="auth-header" style="position: relative; z-index: 1;">
+                <div class="auth-logo">🌽</div>
+                <h1 class="auth-title">Corn Disease Classification</h1>
+                <p class="auth-subtitle">Silakan login untuk melanjutkan</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages" style="position: relative; z-index: 1;">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('login') }}" style="position: relative; z-index: 1;">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name="username" class="form-input" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                </div>
+
+                <button type="submit" class="btn-auth">Login</button>
+            </form>
+
+            <div class="auth-footer" style="position: relative; z-index: 1;">
+                <p style="color: #2e7d32; margin: 0; font-weight: 500;">
+                    Belum punya akun? 
+                    <a href="{{ url_for('register') }}" class="auth-link">Daftar Sekarang</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle (if needed)
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    </script>
+</body>
+</html>
+

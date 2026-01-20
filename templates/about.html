@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Corn Disease Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="header-container">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
+            <div class="header-left">
+                <div class="welcome-text">
+                    <span class="welcome-label">Selamat datang,</span>
+                    <span class="welcome-username">{{ user.full_name or user.username }}</span>
+                </div>
+            </div>
+            <div class="logo">
+                <span class="logo-icon">🌽</span>
+                <span class="logo-text">Corn Disease Classification</span>
+            </div>
+            <div class="mobile-sidebar-overlay" id="mobileOverlay"></div>
+            <nav class="main-nav" id="mainNav">
+                <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">✕</button>
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('about') }}" class="nav-link active">About</a>
+                <a href="{{ url_for('technology') }}" class="nav-link">Technology</a>
+                <a href="{{ url_for('detection') }}" class="nav-link">Detection</a>
+                <a href="{{ url_for('profile') }}" class="nav-link profile-link">Profil Saya</a>
+            </nav>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon">🌙</span>
+                    <span class="theme-text">Theme</span>
+                </button>
+                <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout">
+                    <span>
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 17v-3H9v-4h7V7l5 5-5 5zM14 2a2 2 0 0 1 2 2v2h-2V4H5v16h9v-2h2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9z"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="content-section">
+        <div class="section-container">
+            <div class="info-card">
+                <h2 class="section-title">Tentang Corn Disease Classification</h2>
+                <p class="section-text">
+                    Corn Disease Classification adalah sistem deteksi penyakit daun jagung berbasis kecerdasan buatan yang menggunakan teknologi Deep Learning dengan arsitektur ResNet-50 dan Random Forest. Sistem ini dapat mengidentifikasi tiga kondisi daun jagung: <strong>Hawar, Karat, dan Sehat</strong> dengan akurasi tinggi.
+                </p>
+                <p class="section-text">
+                    Aplikasi ini dirancang untuk membantu petani dan peneliti dalam mendeteksi penyakit tanaman jagung secara cepat dan akurat, serta memberikan rekomendasi penanganan yang tepat. Dengan menggunakan teknologi AI terdepan, sistem ini dapat menganalisis gambar daun jagung dalam hitungan detik dengan tingkat akurasi yang tinggi.
+                </p>
+                <h3 class="subsection-title">Fitur Utama</h3>
+                <ul class="feature-list">
+                    <li>Deteksi cepat dalam waktu kurang dari 1 detik</li>
+                    <li>Akurasi tinggi hingga 85%</li>
+                    <li>Mendukung tiga klasifikasi: Hawar, Karat, dan Sehat</li>
+                    <li>Menggunakan dua model AI: ResNet-50 dan Random Forest</li>
+                    <li>Interface yang mudah digunakan</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-brand-header">
+                        <span class="footer-brand-icon">🌽</span>
+                        <span class="footer-brand-name">Corn Disease Classification</span>
+                    </div>
+                    <p class="footer-brand-tagline">
+                        Menghubungkan Anda dengan teknologi AI canggih untuk deteksi penyakit daun jagung secara akurat dan cepat.
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-links-wrapper">
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="{{ url_for('home') }}#about" class="footer-link">About</a>
+                        <a href="{{ url_for('technology') }}" class="footer-link">Technology</a>
+                        <a href="{{ url_for('detection') }}" class="footer-link">Detection</a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Resources</h3>
+                    <div class="footer-links">
+                        <a href="{{ url_for('home') }}#about" class="footer-link">Disease Database</a>
+                        <a href="{{ url_for('technology') }}" class="footer-link">AI Technology</a>
+                        <a href="{{ url_for('detection') }}" class="footer-link">Detection Guide</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-contact">
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Contact</h3>
+                    <p class="footer-description">
+                        Aplikasi demo untuk klasifikasi penyakit daun jagung menggunakan teknologi Deep Learning ResNet-50 dan Random Forest.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>&copy; 2024 Corn Disease Classification. Educational demo application</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle - Sidebar Style
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mainNav = document.getElementById('mainNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const mobileNavClose = document.getElementById('mobileNavClose');
+        
+        function openMobileMenu() {
+            if (mainNav) mainNav.classList.add('active');
+            if (mobileOverlay) mobileOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            if (mainNav) mainNav.classList.remove('active');
+            if (mobileOverlay) mobileOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle && mainNav) {
+            mobileMenuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openMobileMenu();
+            });
+
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            mainNav.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            });
+        }
+
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>
+

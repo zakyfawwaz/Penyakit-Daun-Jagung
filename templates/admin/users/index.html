@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+
+        <main class="admin-main">
+            {% include 'admin/header.html' %}
+
+            <div class="admin-content">
+                <h1 class="content-title">Users</h1>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <div class="flash-message {{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <div class="table-card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Full Name</th>
+                                <th>Role</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr class="table-row">
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.full_name or '-' }}</td>
+                                <td>
+                                    <span class="status-badge {% if user.role == 'admin' %}published{% else %}draft{% endif %}">{{ user.role }}</span>
+                                </td>
+                                <td>{{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin_users_edit', id=user.id) }}" class="btn btn-sm btn-secondary">Edit</a>
+                                    <form method="POST" action="{{ url_for('admin_users_delete', id=user.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #94a3b8; padding: 40px;">No users yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+

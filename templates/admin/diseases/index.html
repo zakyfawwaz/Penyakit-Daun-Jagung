@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Info - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+
+        <main class="admin-main">
+            {% include 'admin/header.html' %}
+
+            <div class="admin-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h1 class="content-title">Disease Info</h1>
+                    <a href="{{ url_for('admin_diseases_create') }}" class="btn btn-primary">+ Add Disease Info</a>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <div class="flash-message {{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <div class="table-card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for disease in diseases %}
+                            <tr class="table-row">
+                                <td><strong>{{ disease.name }}</strong></td>
+                                <td>{{ disease.description[:100] if disease.description else '-' }}{% if disease.description and disease.description|length > 100 %}...{% endif %}</td>
+                                <td>{{ disease.created_at.strftime('%d %b %Y') if disease.created_at else 'N/A' }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin_diseases_edit', id=disease.id) }}" class="btn btn-sm btn-secondary">Edit</a>
+                                    <form method="POST" action="{{ url_for('admin_diseases_delete', id=disease.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #94a3b8; padding: 40px;">No disease info yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+

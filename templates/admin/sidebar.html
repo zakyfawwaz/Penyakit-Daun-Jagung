@@ -1,0 +1,52 @@
+<aside class="admin-sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">🌽</div>
+        <div class="sidebar-brand">
+            <h2>Corn Disease</h2>
+            <p>Dashboard</p>
+        </div>
+    </div>
+
+    <nav class="sidebar-menu">
+        <a href="{{ url_for('admin_dashboard') }}" class="menu-item {% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+            <span class="menu-item-icon">🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="{{ url_for('admin_detections') }}" class="menu-item {% if 'admin_detections' in request.endpoint %}active{% endif %}">
+            <span class="menu-item-icon">📊</span>
+            <span>Detection History</span>
+        </a>
+        <a href="{{ url_for('admin_diseases') }}" class="menu-item {% if 'admin_diseases' in request.endpoint %}active{% endif %}">
+            <span class="menu-item-icon">🦠</span>
+            <span>Disease Info</span>
+        </a>
+
+        <div class="menu-section">
+            <div class="menu-section-title">System</div>
+            <a href="{{ url_for('admin_users') }}" class="menu-item {% if 'admin_users' in request.endpoint %}active{% endif %}">
+                <span class="menu-item-icon">👥</span>
+                <span>User Management</span>
+            </a>
+                    <a href="{{ url_for('admin_statistics') }}" class="menu-item {% if 'admin_statistics' in request.endpoint %}active{% endif %}">
+                        <span class="menu-item-icon">📈</span>
+                        <span>Statistics</span>
+                    </a>
+                </div>
+
+                <a href="{{ url_for('admin_settings') }}" class="menu-item {% if 'admin_settings' in request.endpoint %}active{% endif %}">
+                    <span class="menu-item-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-profile">
+            <div class="user-avatar">{{ session.full_name[0] if session.full_name else 'A' }}</div>
+            <div class="user-info">
+                <h4>{{ session.full_name or 'Admin' }}</h4>
+                <p>Administrator</p>
+            </div>
+        </div>
+    </div>
+</aside>
+

@@ -1,0 +1,88 @@
+═══════════════════════════════════════════════════════════════
+  PERBAIKAN CEPAT NOTEBOOK - Update 3 Cell Ini Saja!
+═══════════════════════════════════════════════════════════════
+
+MASALAH: Model hanya melatih 6,147 parameter → Akurasi rendah
+SOLUSI: Unfreeze layer3, layer4 → ~10-15 juta parameter trainable
+
+───────────────────────────────────────────────────────────────
+CELL 6: Load Model - GANTI SELURUH KODE DENGAN:
+───────────────────────────────────────────────────────────────
+
+# Load ResNet-50 pretrained
+model = models.resnet50(pretrained=True)
+
+# Ganti fully connected layer untuk 3 kelas
+num_features = model.fc.in_features
+model.fc = nn.Linear(num_features, 3)
+
+# PERBAIKAN: Unfreeze layer akhir untuk fine-tuning
+for param in model.conv1.parameters():
+    param.requires_grad = False
+for param in model.bn1.parameters():
+    param.requires_grad = False
+for param in model.layer1.parameters():
+    param.requires_grad = False
+for param in model.layer2.parameters():
+    param.requires_grad = False
+
+for param in model.layer3.parameters():
+    param.requires_grad = True
+for param in model.layer4.parameters():
+    param.requires_grad = True
+for param in model.fc.parameters():
+    param.requires_grad = True
+
+model = model.to(device)
+
+trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+total = sum(p.numel() for p in model.parameters())
+print(f"Parameter trainable: {trainable:,} (sebelumnya 6,147)")
+print(f"Total: {total:,} ({100*trainable/total:.1f}% trainable)")
+
+───────────────────────────────────────────────────────────────
+CELL 7: Setup Optimizer - GANTI SELURUH KODE DENGAN:
+───────────────────────────────────────────────────────────────
+
+criterion = nn.CrossEntropyLoss()
+
+# PERBAIKAN: Differential Learning Rate
+layer3_params = list(model.layer3.parameters())
+layer4_params = list(model.layer4.parameters())
+fc_params = list(model.fc.parameters())
+
+optimizer = optim.Adam([
+    {'params': layer3_params, 'lr': 0.0001},
+    {'params': layer4_params, 'lr': 0.0005},
+    {'params': fc_params, 'lr': 0.001}
+], weight_decay=1e-4)
+
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50, eta_min=1e-6)
+
+print("Optimizer dengan differential LR sudah disetup!")
+
+───────────────────────────────────────────────────────────────
+CELL 3: Transformasi - GANTI train_transform DENGAN:
+───────────────────────────────────────────────────────────────
+
+train_transform = transforms.Compose([
+    transforms.Resize((256, 256)),
+    transforms.RandomResizedCrop(224, scale=(0.7, 1.0)),
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.RandomVerticalFlip(p=0.3),
+    transforms.RandomRotation(degrees=20),
+    transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.1),
+    transforms.RandomAffine(degrees=0, translate=(0.1, 0.1), scale=(0.9, 1.1)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=mean, std=std),
+    transforms.RandomErasing(p=0.2, scale=(0.02, 0.33))
+])
+
+═══════════════════════════════════════════════════════════════
+SETELAH UPDATE:
+1. Restart kernel notebook
+2. Jalankan semua cell dari awal
+3. Training 50 epoch
+4. Akurasi akan naik drastis!
+═══════════════════════════════════════════════════════════════
+

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection - Corn Disease Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="header-container">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
+            <div class="logo">
+                <span class="logo-icon">🌽</span>
+                <span class="logo-text">Corn Disease Classification</span>
+            </div>
+            <div class="mobile-sidebar-overlay" id="mobileOverlay"></div>
+            <nav class="main-nav" id="mainNav">
+                <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">✕</button>
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('about') }}" class="nav-link">About</a>
+                <a href="{{ url_for('technology') }}" class="nav-link">Technology</a>
+                <a href="{{ url_for('detection') }}" class="nav-link active">Detection</a>
+            </nav>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon">🌙</span>
+                    <span class="theme-text">Theme</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <header>
+            <h1>🌽 Deteksi Penyakit Daun Jagung</h1>
+            <p class="subtitle">Sistem AI berbasis ResNet-50 untuk mendeteksi penyakit hawar, karat, dan daun sehat</p>
+        </header>
+
+        <main>
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages-container">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                <span class="flash-icon">
+                                    {% if category == 'error' %}⚠️
+                                    {% elif category == 'success' %}✅
+                                    {% elif category == 'warning' %}⚠️
+                                    {% else %}ℹ️{% endif %}
+                                </span>
+                                <span class="flash-text">{{ message }}</span>
+                                <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="upload-card">
+                <form id="uploadForm" action="/predict" method="POST" enctype="multipart/form-data">
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput" name="file" accept="image/*" required>
+                        <label for="fileInput" class="upload-label">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span class="upload-text">Klik untuk memilih gambar atau drag & drop</span>
+                            <span class="upload-hint">Format: JPG, PNG, JPEG (Max 16MB)</span>
+                        </label>
+                    </div>
+
+                    <div class="preview-container" id="previewContainer" style="display: none;">
+                        <img id="imagePreview" src="" alt="Preview">
+                        <button type="button" class="remove-btn" id="removeBtn">✕ Hapus</button>
+                    </div>
+
+                    <button type="submit" class="detect-btn" id="detectBtn" disabled>
+                        🔍 Deteksi Sekarang
+                    </button>
+                </form>
+            </div>
+
+            <div class="info-section">
+                <h2>Kelas Deteksi</h2>
+                <div class="classes-grid">
+                    <div class="class-card">
+                        <div class="class-icon">🦠</div>
+                        <h3>Hawar</h3>
+                        <p>Daun jagung yang terkena penyakit hawar</p>
+                    </div>
+                    <div class="class-card">
+                        <div class="class-icon">✅</div>
+                        <h3>Sehat</h3>
+                        <p>Daun jagung dalam kondisi sehat</p>
+                    </div>
+                    <div class="class-card">
+                        <div class="class-icon">🟠</div>
+                        <h3>Karat</h3>
+                        <p>Daun jagung yang terkena penyakit karat</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Deteksi Penyakit Daun Jagung - AI System</p>
+        </footer>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle - Sidebar Style
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mainNav = document.getElementById('mainNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const mobileNavClose = document.getElementById('mobileNavClose');
+        
+        function openMobileMenu() {
+            if (mainNav) mainNav.classList.add('active');
+            if (mobileOverlay) mobileOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            if (mainNav) mainNav.classList.remove('active');
+            if (mobileOverlay) mobileOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle && mainNav) {
+            mobileMenuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openMobileMenu();
+            });
+
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            mainNav.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            });
+        }
+
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const removeBtn = document.getElementById('removeBtn');
+        const detectBtn = document.getElementById('detectBtn');
+        const uploadForm = document.getElementById('uploadForm');
+
+        // Handle file selection
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    uploadArea.style.display = 'none';
+                    detectBtn.disabled = false;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                fileInput.files = e.dataTransfer.files;
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        });
+
+        // Remove image
+        removeBtn.addEventListener('click', function() {
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            uploadArea.style.display = 'flex';
+            detectBtn.disabled = true;
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Auto-hide flash messages after 5 seconds
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach(message => {
+            setTimeout(() => {
+                message.style.opacity = '0';
+                message.style.transform = 'translateY(-10px)';
+                setTimeout(() => message.remove(), 300);
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">🌽</div>
+                <div class="sidebar-brand">
+                    <h2>Corn Disease</h2>
+                    <p>Dashboard</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="{{ url_for('admin_dashboard') }}" class="menu-item active">
+                    <span class="menu-item-icon">🏠</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('admin_detections') }}" class="menu-item">
+                    <span class="menu-item-icon">📊</span>
+                    <span>Detection History</span>
+                </a>
+                <a href="{{ url_for('admin_diseases') }}" class="menu-item">
+                    <span class="menu-item-icon">🦠</span>
+                    <span>Disease Info</span>
+                </a>
+
+                <div class="menu-section">
+                    <div class="menu-section-title">System</div>
+                    <a href="{{ url_for('admin_users') }}" class="menu-item">
+                        <span class="menu-item-icon">👥</span>
+                        <span>User Management</span>
+                    </a>
+                    <a href="{{ url_for('admin_statistics') }}" class="menu-item">
+                        <span class="menu-item-icon">📈</span>
+                        <span>Statistics</span>
+                    </a>
+                </div>
+
+                <a href="{{ url_for('admin_settings') }}" class="menu-item">
+                    <span class="menu-item-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">{{ session.full_name[0] if session.full_name else 'A' }}</div>
+                    <div class="user-info">
+                        <h4>{{ session.full_name or 'Admin' }}</h4>
+                        <p>Administrator</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <button class="mobile-sidebar-toggle" id="mobileSidebarToggle" aria-label="Toggle sidebar">
+                    ☰
+                </button>
+                <div class="header-left">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Enter keywords ...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="header-action" id="themeToggle" aria-label="Toggle theme">☀️</button>
+                    <button class="header-action" id="notificationBtn" aria-label="Notifications">🔔</button>
+                    <div class="header-user">
+                        <div class="header-user-avatar">{{ session.full_name[0] if session.full_name else 'A' }}</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="admin-content">
+                <h1 class="content-title">Dashboard</h1>
+
+                <!-- Summary Cards -->
+                <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="card-header">
+                        <div class="card-icon blue">👥</div>
+                    </div>
+                    <div class="card-value">{{ total_users }}</div>
+                    <div class="card-label">Total Users</div>
+                    <div class="card-change positive">
+                        <span>↑</span>
+                        <span>4.07%</span>
+                        <span>Last month</span>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-header">
+                        <div class="card-icon orange">🔍</div>
+                    </div>
+                    <div class="card-value">{{ total_detections }}</div>
+                    <div class="card-label">Total Detections</div>
+                    <div class="card-change positive">
+                        <span>↑</span>
+                        <span>0.24%</span>
+                        <span>Last month</span>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-header">
+                        <div class="card-icon purple">🦠</div>
+                    </div>
+                    <div class="card-value">{{ total_diseases }}</div>
+                    <div class="card-label">Disease Info</div>
+                    <div class="card-change positive">
+                        <span>→</span>
+                        <span>0.00%</span>
+                        <span>Last month</span>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-header">
+                        <div class="card-icon green">📊</div>
+                    </div>
+                    <div class="card-value">{{ today_detections }}</div>
+                    <div class="card-label">Today Detections</div>
+                    <div class="card-change positive">
+                        <span>↑</span>
+                        <span>New</span>
+                        <span>Today</span>
+                    </div>
+                </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Visitor Statistics</h3>
+                        <div class="chart-placeholder">
+                            Chart: Visitor Statistics (Nov - July)
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">New Customers 28 Daily Avg.</h3>
+                        <div class="chart-placeholder">
+                            Chart: New Customers
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tables -->
+                <div class="table-section">
+                    <div class="table-card">
+                        <h3 class="table-title">Recent Detections</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Prediction</th>
+                                    <th>Confidence</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for detection in recent_detections %}
+                                <tr class="table-row">
+                                    <td>{{ detection.user.full_name or detection.user.username }}</td>
+                                    <td>
+                                        <span class="status-badge {% if detection.cnn_prediction == 'sehat' %}published{% elif detection.cnn_prediction == 'hawar' %}pending{% else %}draft{% endif %}">
+                                            {{ detection.cnn_prediction or 'N/A' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ "%.1f"|format(detection.cnn_confidence) if detection.cnn_confidence else 'N/A' }}%</td>
+                                    <td>{{ detection.created_at.strftime('%d.%m') if detection.created_at else 'N/A' }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: #94a3b8;">No detections yet</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-card">
+                        <h3 class="table-title">Top Users</h3>
+                        <p style="color: #64748b; font-size: 0.9em; margin-bottom: 15px;">
+                            {{ total_users }} Users, {{ total_detections }} Total Detections
+                        </p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Detections</th>
+                                    <th>Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user_stat in top_users %}
+                                <tr class="table-row">
+                                    <td>{{ user_stat.username }}</td>
+                                    <td>{{ user_stat.detection_count }}</td>
+                                    <td class="card-change positive">
+                                        <span>+{{ user_stat.detection_count }}</span>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" style="text-align: center; color: #94a3b8;">No users yet</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='admin-mobile.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin-features.js') }}"></script>
+</body>
+</html>
+

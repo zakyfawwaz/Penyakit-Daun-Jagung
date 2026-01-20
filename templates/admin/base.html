@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+
+        <main class="admin-main">
+            {% include 'admin/header.html' %}
+
+            <div class="admin-content">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='admin-mobile.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin-features.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

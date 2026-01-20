@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Deteksi - Corn Disease Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="result-page">
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="header-container">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
+            <div class="header-left">
+                <div class="welcome-text">
+                    <span class="welcome-label">Selamat datang,</span>
+                    <span class="welcome-username">{{ user.full_name or user.username }}</span>
+                </div>
+            </div>
+            <div class="logo">
+                <span class="logo-icon">🌽</span>
+                <span class="logo-text">Corn Disease Classification</span>
+            </div>
+            <div class="mobile-sidebar-overlay" id="mobileOverlay"></div>
+            <nav class="main-nav" id="mainNav">
+                <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">✕</button>
+                <a href="{{ url_for('home') }}#home" class="nav-link">Home</a>
+                <a href="{{ url_for('home') }}#about" class="nav-link">About</a>
+                <a href="{{ url_for('home') }}#technology" class="nav-link">Technology</a>
+                <a href="{{ url_for('home') }}#detection" class="nav-link active">Detection</a>
+                <a href="{{ url_for('profile') }}" class="nav-link profile-link">Profil Saya</a>
+            </nav>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon">🌙</span>
+                    <span class="theme-text">Theme</span>
+                </button>
+                <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout">
+                    <span>
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 17v-3H9v-4h7V7l5 5-5 5zM14 2a2 2 0 0 1 2 2v2h-2V4H5v16h9v-2h2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9z"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <header>
+                <h1>📊 Hasil Deteksi</h1>
+            </header>
+
+            <main>
+            <div class="result-card">
+                <div class="result-image">
+                    <img src="{{ url_for('static', filename=image_url) }}" alt="Gambar yang dianalisis">
+                </div>
+
+                <div class="result-info">
+                    <h2 class="result-title">Prediction Results</h2>
+                    
+                    <!-- CNN Model Prediction -->
+                    {% if cnn_available %}
+                    <div class="prediction-item">
+                        <div class="prediction-label-simple {% if cnn_prediction == 'sehat' %}sehat{% elif cnn_prediction == 'hawar' %}hawar{% elif cnn_prediction == 'karat' %}karat{% endif %}">
+                            <span class="prediction-icon-simple">{% if cnn_prediction == 'sehat' %}✓{% elif cnn_prediction == 'hawar' %}🦠{% elif cnn_prediction == 'karat' %}<span class="icon-dot"></span>{% endif %}</span>
+                            <span class="prediction-text-simple">{{ cnn_prediction.upper() }}</span>
+                        </div>
+                        <div class="confidence-bar-simple">
+                            <div class="confidence-bar-bg">
+                                <div class="confidence-fill-simple" style="width: {{ cnn_confidence }}%"></div>
+                            </div>
+                            <span class="confidence-percent">{{ "%.1f"|format(cnn_confidence) }}%</span>
+                        </div>
+                        <p class="model-name">CNN Model</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Random Forest Model Prediction -->
+                    {% if rf_available %}
+                    <div class="prediction-item">
+                        <div class="prediction-label-simple {% if rf_prediction == 'sehat' %}sehat{% elif rf_prediction == 'hawar' %}hawar{% elif rf_prediction == 'karat' %}karat{% endif %}">
+                            <span class="prediction-icon-simple">{% if rf_prediction == 'sehat' %}✓{% elif rf_prediction == 'hawar' %}🦠{% elif rf_prediction == 'karat' %}<span class="icon-dot"></span>{% endif %}</span>
+                            <span class="prediction-text-simple">{{ rf_prediction.upper() }}</span>
+                        </div>
+                        <div class="confidence-bar-simple">
+                            <div class="confidence-bar-bg">
+                                <div class="confidence-fill-simple" style="width: {{ rf_confidence }}%"></div>
+                            </div>
+                            <span class="confidence-percent">{{ "%.1f"|format(rf_confidence) }}%</span>
+                        </div>
+                        <p class="model-name">Random Forest Model</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="action-buttons">
+                        <a href="{{ url_for('home') }}#detection" class="btn-back">← Kembali ke Upload</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solusi & Saran AI Section -->
+            {% if cnn_available and rf_available %}
+                {% set final_prediction = cnn_prediction if cnn_confidence >= rf_confidence else rf_prediction %}
+            {% elif cnn_available %}
+                {% set final_prediction = cnn_prediction %}
+            {% elif rf_available %}
+                {% set final_prediction = rf_prediction %}
+            {% else %}
+                {% set final_prediction = 'N/A' %}
+            {% endif %}
+
+            {% if final_prediction != 'N/A' and final_prediction != 'sehat' %}
+            <div class="solution-section">
+                <div class="solution-container">
+                    <div class="solution-main-card">
+                        <div class="solution-card-content">
+                            <h2 class="solution-title">Solusi & Saran AI</h2>
+                        
+                        {% if final_prediction == 'karat' %}
+                        <div class="solution-info-card">
+                            <p>Daun jagung terdeteksi terkena penyakit karat. Penyakit ini disebabkan oleh jamur <strong>Puccinia sorghi</strong> yang dapat menyebabkan kerusakan serius pada tanaman jagung.</p>
+                        </div>
+
+                        <h3 class="solution-subtitle">Penanganan Terbaik untuk Kondisi Daun Jagung 'Karat'</h3>
+                        <ol class="solution-list">
+                            <li>Identifikasi dini dengan memeriksa daun jagung secara rutin untuk tanda-tanda infeksi seperti bintik-bintik berwarna karat.</li>
+                            <li>Jika ditemukan gejala karat, lakukan pengendalian segera menggunakan fungisida yang tepat seperti Tebuconazole, Propiconazole, atau Trifloxystrobin.</li>
+                            <li>Lakukan rotasi tanaman dan sanitasi lingkungan untuk mengurangi penyebaran penyakit.</li>
+                            <li>Pastikan tanaman mendapat sinar matahari dan air yang cukup, serta drainase tanah yang baik.</li>
+                        </ol>
+
+                        <h3 class="solution-subtitle">Obat yang Direkomendasikan:</h3>
+                        <div class="medicine-grid">
+                            <div class="medicine-card">
+                                <p><strong>Tebuconazole 250 EC</strong></p>
+                                <p>Dosis: 0.5-1 ml/liter air</p>
+                            </div>
+                            <div class="medicine-card">
+                                <p><strong>Propiconazole 250 EC</strong></p>
+                                <p>Dosis: 0.5-1 ml/liter air</p>
+                            </div>
+                            <div class="medicine-card">
+                                <p><strong>Trifloxystrobin 500 SC</strong></p>
+                                <p>Dosis: 0.3-0.5 ml/liter air</p>
+                            </div>
+                            <div class="medicine-card">
+                                <p><strong>Azoxystrobin 250 SC</strong></p>
+                                <p>Dosis: 0.5-1 ml/liter air</p>
+                            </div>
+                        </div>
+
+                        <h3 class="solution-subtitle">Perawatan Terbaik agar Daun Jagung Tetap Sehat (dan Terhindar dari Penyakit 'Karat')</h3>
+                        <ol class="solution-list">
+                            <li>Gunakan varietas jagung yang tahan terhadap penyakit karat.</li>
+                            <li>Lakukan pemupukan yang seimbang dengan memperhatikan kebutuhan nitrogen, fosfor, dan kalium.</li>
+                            <li>Jaga jarak tanam yang optimal untuk sirkulasi udara yang baik.</li>
+                            <li>Lakukan penyiraman yang teratur namun tidak berlebihan untuk menghindari kelembaban berlebih.</li>
+                            <li>Pantau kondisi tanaman secara berkala dan segera tangani jika terdeteksi gejala awal penyakit.</li>
+                        </ol>
+
+                        {% elif final_prediction == 'hawar' %}
+                        <div class="solution-info-card">
+                            <p>Daun jagung terdeteksi terkena penyakit hawar. Penyakit ini disebabkan oleh bakteri <strong>Xanthomonas campestris</strong> atau jamur <strong>Helminthosporium maydis</strong> yang dapat menyebabkan kerusakan signifikan pada tanaman jagung.</p>
+                        </div>
+
+                        <h3 class="solution-subtitle">Penanganan Terbaik untuk Kondisi Daun Jagung 'Hawar'</h3>
+                        <ol class="solution-list">
+                            <li>Identifikasi dini dengan memeriksa daun jagung secara rutin untuk tanda-tanda infeksi seperti bercak-bercak coklat atau hitam pada daun.</li>
+                            <li>Jika ditemukan gejala hawar, lakukan pengendalian segera menggunakan bakterisida atau fungisida yang tepat seperti Mancozeb, Chlorothalonil, atau Copper-based fungicides.</li>
+                            <li>Buang dan bakar bagian tanaman yang terinfeksi untuk mencegah penyebaran penyakit.</li>
+                            <li>Lakukan rotasi tanaman dengan tanaman non-inang dan jaga kebersihan lahan dari sisa-sisa tanaman yang terinfeksi.</li>
+                            <li>Pastikan drainase tanah baik dan hindari penyiraman yang berlebihan untuk mengurangi kelembaban.</li>
+                        </ol>
+
+                        <h3 class="solution-subtitle">Obat yang Direkomendasikan:</h3>
+                        <div class="medicine-grid">
+                            <div class="medicine-card">
+                                <p><strong>Mancozeb 80 WP</strong></p>
+                                <p>Dosis: 2-3 gram/liter air</p>
+                            </div>
+                            <div class="medicine-card">
+                                <p><strong>Chlorothalonil 500 SC</strong></p>
+                                <p>Dosis: 1-2 ml/liter air</p>
+                            </div>
+                            <div class="medicine-card">
+                                <p><strong>Copper Oxychloride 50 WP</strong></p>
+                                <p>Dosis: 2-3 gram/liter air</p>
+                            </div>
+                            <div class="medicine-card">
+                                <p><strong>Streptomycin Sulfate</strong></p>
+                                <p>Dosis: 0.5-1 gram/liter air</p>
+                            </div>
+                        </div>
+
+                        <h3 class="solution-subtitle">Perawatan Terbaik agar Daun Jagung Tetap Sehat (dan Terhindar dari Penyakit 'Hawar')</h3>
+                        <ol class="solution-list">
+                            <li>Gunakan varietas jagung yang tahan terhadap penyakit hawar.</li>
+                            <li>Lakukan pemupukan yang seimbang dan hindari kelebihan nitrogen yang dapat membuat tanaman lebih rentan.</li>
+                            <li>Jaga jarak tanam yang optimal untuk mengurangi kelembaban dan meningkatkan sirkulasi udara.</li>
+                            <li>Lakukan penyiraman di pagi hari agar daun cepat kering dan hindari penyiraman di malam hari.</li>
+                            <li>Pantau kondisi tanaman secara berkala dan segera tangani jika terdeteksi gejala awal penyakit.</li>
+                        </ol>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            </main>
+        </div>
+
+        <footer class="main-footer">
+            <div class="footer-container">
+                <div class="footer-top">
+                    <div class="footer-brand">
+                        <div class="footer-brand-header">
+                            <span class="footer-brand-icon">🌽</span>
+                            <span class="footer-brand-name">Corn Disease Classification</span>
+                        </div>
+                        <p class="footer-brand-tagline">
+                            Menghubungkan Anda dengan teknologi AI canggih untuk deteksi penyakit daun jagung secara akurat dan cepat.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="footer-links-wrapper">
+                    <div class="footer-section">
+                        <h3 class="footer-section-title">Quick Links</h3>
+                        <div class="footer-links">
+                            <a href="{{ url_for('home') }}#about" class="footer-link">About</a>
+                            <a href="{{ url_for('technology') }}" class="footer-link">Technology</a>
+                            <a href="{{ url_for('detection') }}" class="footer-link">Detection</a>
+                        </div>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3 class="footer-section-title">Resources</h3>
+                        <div class="footer-links">
+                            <a href="{{ url_for('home') }}#about" class="footer-link">Disease Database</a>
+                            <a href="{{ url_for('technology') }}" class="footer-link">AI Technology</a>
+                            <a href="{{ url_for('detection') }}" class="footer-link">Detection Guide</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-contact">
+                    <div class="footer-section">
+                        <h3 class="footer-section-title">Contact</h3>
+                        <p class="footer-description">
+                            Aplikasi demo untuk klasifikasi penyakit daun jagung menggunakan teknologi Deep Learning ResNet-50 dan Random Forest.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2024 Corn Disease Classification. Educational demo application</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle - Sidebar Style
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mainNav = document.getElementById('mainNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const mobileNavClose = document.getElementById('mobileNavClose');
+        
+        function openMobileMenu() {
+            if (mainNav) mainNav.classList.add('active');
+            if (mobileOverlay) mobileOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            if (mainNav) mainNav.classList.remove('active');
+            if (mobileOverlay) mobileOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle && mainNav) {
+            mobileMenuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openMobileMenu();
+            });
+
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            mainNav.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            });
+        }
+
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technology - Corn Disease Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="header-container">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
+            <div class="header-left">
+                <div class="welcome-text">
+                    <span class="welcome-label">Selamat datang,</span>
+                    <span class="welcome-username">{{ user.full_name or user.username }}</span>
+                </div>
+            </div>
+            <div class="logo">
+                <span class="logo-icon">🌽</span>
+                <span class="logo-text">Corn Disease Classification</span>
+            </div>
+            <div class="mobile-sidebar-overlay" id="mobileOverlay"></div>
+            <nav class="main-nav" id="mainNav">
+                <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">✕</button>
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('about') }}" class="nav-link">About</a>
+                <a href="{{ url_for('technology') }}" class="nav-link active">Technology</a>
+                <a href="{{ url_for('detection') }}" class="nav-link">Detection</a>
+                <a href="{{ url_for('profile') }}" class="nav-link profile-link">Profil Saya</a>
+            </nav>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon">🌙</span>
+                    <span class="theme-text">Theme</span>
+                </button>
+                <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout">
+                    <span>
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 17v-3H9v-4h7V7l5 5-5 5zM14 2a2 2 0 0 1 2 2v2h-2V4H5v16h9v-2h2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9z"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="content-section">
+        <div class="section-container">
+            <h2 class="section-title">Teknologi yang Digunakan</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">🔲</div>
+                    <h3 class="tech-title">ResNet-50</h3>
+                    <p class="tech-description">Arsitektur CNN yang efisien dan optimal untuk deteksi gambar dengan performa tinggi dan akurasi maksimal. ResNet-50 menggunakan residual connections untuk mengatasi masalah vanishing gradient dan mengekstrak fitur-fitur kompleks dari gambar untuk identifikasi penyakit yang akurat.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🌳</div>
+                    <h3 class="tech-title">Random Forest</h3>
+                    <p class="tech-description">Ensemble learning method yang menggunakan fitur yang diekstrak dari ResNet-50 untuk klasifikasi. Random Forest memberikan prediksi yang robust dan mengurangi overfitting dengan menggabungkan multiple decision trees.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">⚡</div>
+                    <h3 class="tech-title">Fast Processing</h3>
+                    <p class="tech-description">Hasil analisis dalam hitungan detik dengan akurasi tinggi untuk keputusan cepat. Sistem dioptimasi untuk memberikan hasil real-time tanpa mengorbankan akurasi.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🎯</div>
+                    <h3 class="tech-title">High Accuracy</h3>
+                    <p class="tech-description">Model terlatih dengan ribuan gambar untuk memberikan prediksi yang akurat dan reliable. Dataset yang komprehensif memastikan model dapat mengenali berbagai variasi kondisi daun.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🖼️</div>
+                    <h3 class="tech-title">Image Processing</h3>
+                    <p class="tech-description">Preprocessing gambar menggunakan teknik normalisasi dan augmentasi untuk meningkatkan kualitas input model dan akurasi prediksi.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-brand-header">
+                        <span class="footer-brand-icon">🌽</span>
+                        <span class="footer-brand-name">Corn Disease Classification</span>
+                    </div>
+                    <p class="footer-brand-tagline">
+                        Menghubungkan Anda dengan teknologi AI canggih untuk deteksi penyakit daun jagung secara akurat dan cepat.
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-links-wrapper">
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="{{ url_for('about') }}" class="footer-link">About</a>
+                        <a href="{{ url_for('technology') }}" class="footer-link">Technology</a>
+                        <a href="{{ url_for('detection') }}" class="footer-link">Detection</a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Resources</h3>
+                    <div class="footer-links">
+                        <a href="{{ url_for('about') }}" class="footer-link">Disease Database</a>
+                        <a href="{{ url_for('technology') }}" class="footer-link">AI Technology</a>
+                        <a href="{{ url_for('detection') }}" class="footer-link">Detection Guide</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-contact">
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Contact</h3>
+                    <p class="footer-description">
+                        Aplikasi demo untuk klasifikasi penyakit daun jagung menggunakan teknologi Deep Learning ResNet-50 dan Random Forest.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>&copy; 2024 Corn Disease Classification. Educational demo application</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle - Sidebar Style
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mainNav = document.getElementById('mainNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const mobileNavClose = document.getElementById('mobileNavClose');
+        
+        function openMobileMenu() {
+            if (mainNav) mainNav.classList.add('active');
+            if (mobileOverlay) mobileOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            if (mainNav) mainNav.classList.remove('active');
+            if (mobileOverlay) mobileOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle && mainNav) {
+            mobileMenuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openMobileMenu();
+            });
+
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            }
+
+            mainNav.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            });
+        }
+
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            themeToggle.querySelector('.theme-icon').textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+
+        <main class="admin-main">
+            {% include 'admin/header.html' %}
+
+            <div class="admin-content">
+                <h1 class="content-title">Comments</h1>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <div class="flash-message {{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <div class="table-card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Post</th>
+                                <th>Author</th>
+                                <th>Content</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comment in comments %}
+                            <tr class="table-row">
+                                <td>{{ comment.post.title[:30] }}{% if comment.post.title|length > 30 %}...{% endif %}</td>
+                                <td>{{ comment.author.full_name or comment.author.username }}</td>
+                                <td>{{ comment.content[:50] }}{% if comment.content|length > 50 %}...{% endif %}</td>
+                                <td>
+                                    <span class="status-badge {{ comment.status }}">{{ comment.status }}</span>
+                                </td>
+                                <td>{{ comment.created_at.strftime('%d %b %Y') if comment.created_at else 'N/A' }}</td>
+                                <td>
+                                    {% if comment.status == 'pending' %}
+                                    <form method="POST" action="{{ url_for('admin_comments_approve', id=comment.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-primary">Approve</button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('admin_comments_reject', id=comment.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-secondary">Reject</button>
+                                    </form>
+                                    {% endif %}
+                                    <form method="POST" action="{{ url_for('admin_comments_delete', id=comment.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #94a3b8; padding: 40px;">No comments yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+

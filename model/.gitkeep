@@ -1,0 +1,3 @@
+# Folder ini akan berisi model_resnet50.pth setelah training
+# Jalankan notebook train_resnet50.ipynb untuk menghasilkan model
+

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <style>
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .settings-section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1e293b;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        .settings-item-label {
+            flex: 1;
+        }
+        .settings-item-label h4 {
+            font-size: 1em;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        .settings-item-label p {
+            font-size: 0.85em;
+            color: #64748b;
+        }
+        .settings-item-action {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .info-badge {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        {% include 'admin/sidebar.html' %}
+
+        <main class="admin-main">
+            {% include 'admin/header.html' %}
+
+            <div class="admin-content">
+                <h1 class="content-title">Settings</h1>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <div class="flash-message {{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- General Settings -->
+                <div class="settings-section">
+                    <h2 class="settings-section-title">General Settings</h2>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Application Name</h4>
+                            <p>Nama aplikasi yang ditampilkan kepada pengguna</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="info-badge">Corn Disease Classification</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Application Version</h4>
+                            <p>Versi aplikasi saat ini</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="info-badge">v1.0.0</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Total Users</h4>
+                            <p>Jumlah total pengguna terdaftar</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="info-badge">{{ total_users }} users</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Total Detections</h4>
+                            <p>Jumlah total deteksi yang telah dilakukan</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="info-badge">{{ total_detections }} detections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Settings -->
+                <div class="settings-section">
+                    <h2 class="settings-section-title">Model Settings</h2>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>CNN Model</h4>
+                            <p>ResNet-50 untuk klasifikasi penyakit jagung</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="info-badge">ResNet-50</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Machine Learning Model</h4>
+                            <p>Random Forest untuk klasifikasi tambahan</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="info-badge">Random Forest</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Model Status</h4>
+                            <p>Status ketersediaan model</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="status-badge published">Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Information -->
+                <div class="settings-section">
+                    <h2 class="settings-section-title">System Information</h2>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Database</h4>
+                            <p>Sistem database yang digunakan</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="info-badge">SQLite</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Framework</h4>
+                            <p>Framework web yang digunakan</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="info-badge">Flask</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Python Version</h4>
+                            <p>Versi Python yang digunakan</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <span class="info-badge">Python 3.x</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maintenance -->
+                <div class="settings-section">
+                    <h2 class="settings-section-title">Maintenance</h2>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Database Backup</h4>
+                            <p>Lakukan backup database secara manual</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <button class="btn btn-secondary" onclick="alert('Fitur backup akan segera tersedia')">Backup Now</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">
+                            <h4>Clear Cache</h4>
+                            <p>Hapus cache aplikasi untuk performa lebih baik</p>
+                        </div>
+                        <div class="settings-item-action">
+                            <button class="btn btn-secondary" onclick="alert('Cache cleared successfully')">Clear Cache</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+

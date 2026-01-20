@@ -1,0 +1,19 @@
+<header class="admin-header">
+    <button class="mobile-sidebar-toggle" id="mobileSidebarToggle" aria-label="Toggle sidebar">
+        ☰
+    </button>
+    <div class="header-left">
+        <div class="search-bar">
+            <input type="text" placeholder="Enter keywords ...">
+        </div>
+    </div>
+    <div class="header-right">
+        <button class="header-action" id="themeToggle" aria-label="Toggle theme">☀️</button>
+        <button class="header-action" id="notificationBtn" aria-label="Notifications">🔔</button>
+        <div class="header-user">
+            <div class="header-user-avatar">{{ session.full_name[0] if session.full_name else 'A' }}</div>
+        </div>
+        <a href="{{ url_for('admin_logout') }}" class="btn btn-sm btn-danger">Logout</a>
+    </div>
+</header>
+

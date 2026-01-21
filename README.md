@@ -115,4 +115,4 @@ Untuk training model sendiri, gunakan notebook `notebook/train_resnet50.ipynb` y
 ## Link 
 - Link Dataset : https://www.kaggle.com/datasets/taufiqnoviant/daun-jagung
 - Link Youtube : https://youtu.be/Mit7rQAXBLA?si=V-u-4it52-3sClf1
-- Link Github  : https://github.com/KharisMaulanaElhaq/Pengolahan-Citra-Digital.git
+- Link Github  : https://github.com/zakyfawwaz/Penyakit-Daun-Jagung.git

@@ -107,7 +107,12 @@ Untuk training model sendiri, gunakan notebook `notebook/train_resnet50.ipynb` y
 - Ukuran maksimal file: 16MB
 - Model menggunakan preprocessing ImageNet standard
 
-## Lisensi
+## Akses Admin
 
-Project ini dibuat untuk keperluan akademik dan pembelajaran.
+- username : admin
+- passowrd : adminjagung123 
 
+## Link 
+- Link Dataset : https://www.kaggle.com/datasets/taufiqnoviant/daun-jagung
+- Link Youtube : https://youtu.be/Mit7rQAXBLA?si=V-u-4it52-3sClf1
+- Link Github  : https://github.com/KharisMaulanaElhaq/Pengolahan-Citra-Digital.git
